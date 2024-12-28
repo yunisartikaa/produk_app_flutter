@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart'; // Import intl
 
 class DetailProdukPage extends StatefulWidget {
   final int productId;
@@ -55,6 +56,11 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
     }
   }
 
+  // Fungsi untuk memformat harga
+  String formatPrice(int price) {
+    return NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(price);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,10 +86,11 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Gambar produk dengan overlay
-                      Stack(
-                        alignment: Alignment.center,
+                      // Gambar produk dengan teks di bawahnya
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Gambar produk
                           Container(
                             height: 250,
                             width: double.infinity,
@@ -92,44 +99,28 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                               image: DecorationImage(
                                 image: product['image_url'] != null
                                     ? NetworkImage(product['image_url'])
-                                    : AssetImage('assets/product 5.jpg') as ImageProvider,
+                                    : AssetImage('assets/product.jpg') as ImageProvider,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                          Column(
-                            children: [
-                              Text(
-                                product['name'] ?? 'Nama produk tidak tersedia',
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(
-                                      offset: Offset(1.5, 1.5),
-                                      blurRadius: 3.0,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                "Rp ${product['price'] ?? 0}",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(
-                                      offset: Offset(1.5, 1.5),
-                                      blurRadius: 3.0,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          SizedBox(height: 8.0), // Jarak antara gambar dan teks
+                          // Nama produk
+                          Text(
+                            product['name'] ?? 'Nama produk tidak tersedia',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          // Harga produk
+                          Text(
+                            "Rp ${formatPrice(product['price'] ?? 0)}",
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
                           ),
                         ],
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert'; // Untuk mengelola JSON
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart'; // Import intl untuk format harga
 import 'detail_produk.dart';
 
 class HomePage extends StatefulWidget {
@@ -46,13 +47,18 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Fungsi untuk memformat harga
+  String formatPrice(int price) {
+    return NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(price);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF37898C), // Warna latar belakang #37898C (hijau kebiruan)
       appBar: AppBar(
         elevation: 0.1,
-        backgroundColor: Color.fromARGB(255, 54, 122, 125), // Warna AppBar #9DD8D4 (hijau pastel)
+        backgroundColor: Color.fromARGB(255, 54, 122, 125), // Warna AppBar
         title: Text(
           "Daftar Produk",
           style: TextStyle(
@@ -87,11 +93,11 @@ class _HomePageState extends State<HomePage> {
                         child: Icon(Icons.shopping_cart, color: Colors.white),
                       ),
                       title: Text(
-                        product['name'],
+                        product['name'] ?? 'Nama produk tidak tersedia',
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),
                       ),
                       subtitle: Text(
-                        "Rp ${product['price']}",
+                        "Rp ${formatPrice(product['price'] ?? 0)}",
                         style: TextStyle(color: Colors.white70, fontSize: 14.0),
                       ),
                       trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
